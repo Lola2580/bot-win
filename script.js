@@ -1,10 +1,3 @@
-//============================================================
-// 🎯 WINGO ULTIMATE BOT v9 — REAL MODE ONLY
-//============================================================
-// Trigger: 0 = bet every signal (normal)
-//          N = bet after N consecutive observation losses
-// Total Bet display = auto-calculated worst-case stake
-//============================================================
 (function () {
   "use strict";
 
@@ -253,26 +246,23 @@
     }
     @keyframes wgFadeIn { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: scale(1); } }
 
-    .wg-panel {
+        .wg-panel {
       position: relative;
-      background: rgba(15, 18, 32, 0.5);
+      background: rgba(15, 18, 32, 0.85); /* Thoda dark kiya taaki text saaf dikhe */
       backdrop-filter: blur(28px) saturate(180%);
       -webkit-backdrop-filter: blur(28px) saturate(180%);
-      border-radius: 20px;
-      padding: 14px;
-      max-width: 360px;
-      width: 100%;
-      max-height: 90vh;
+      border-radius: 16px;
+      padding: 12px;
+      width: 100%;            /* Full width */
+      max-width: 100%;        /* Mobile pe poora screen cover kare */
+      max-height: 95dvh;      /* Dynamic viewport height (address bar hide/show handle karega) */
       overflow-y: auto;
       color: #e8e6f0;
-      font: 12px/1.4 system-ui, -apple-system, "Segoe UI", sans-serif;
+      font: 12px/1.4 system-ui, -apple-system, sans-serif;
       border: 1px solid rgba(255,255,255,0.1);
-      box-shadow:
-        0 20px 60px rgba(0,0,0,0.75),
-        0 0 0 1px rgba(255,255,255,0.05) inset,
-        0 1px 0 rgba(255,255,255,0.1) inset;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.9);
       animation: wgFadeIn 0.28s ease;
-      scrollbar-width: none;
+      scrollbar-width: none; 
       -ms-overflow-style: none;
     }
     .wg-panel::-webkit-scrollbar { display: none; width: 0; height: 0; }
@@ -723,10 +713,11 @@
 
     overlay = document.createElement("div");
     overlay.id = "wingo-overlay";
-    overlay.style.cssText = `position:fixed;inset:0;z-index:1000000;
-      background:rgba(0,0,0,0.65);backdrop-filter:blur(8px);
-      -webkit-backdrop-filter:blur(8px);
-      display:none;align-items:center;justify-content:center;padding:14px;`;
+       overlay.style.cssText = `position:fixed;inset:0;z-index:2147483647;
+      background:rgba(0,0,0,0.85);backdrop-filter:blur(5px);
+      -webkit-backdrop-filter:blur(5px);
+      display:none;align-items:center;justify-content:center;
+      padding:8px; /* 14px se kam karke 8px kiya */`;
     overlay.innerHTML = `
       <div class="wg-panel">
         <div class="wg-header">
