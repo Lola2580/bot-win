@@ -684,32 +684,63 @@
     float.onmouseleave = () => { float.style.transform = "scale(1)"; };
     document.body.appendChild(float);
 
-    (() => {
-      let active = false, sx = 0, sy = 0, moved = false;
-      const start = (cx, cy) => {
-        const r = float.getBoundingClientRect();
-        active = true; moved = false; sx = cx - r.left; sy = cy - r.top;
-      };
-      const move = (cx, cy) => {
-        if (!active) return;
-        moved = true;
-        float.style.left = cx - sx + "px";
-        float.style.top = cy - sy + "px";
-        float.style.right = "auto"; float.style.bottom = "auto";
-      };
-      const end = () => { setTimeout(() => { active = false; }, 50); };
-      float.addEventListener("mousedown", (e) => { e.preventDefault(); start(e.clientX, e.clientY); });
-      document.addEventListener("mousemove", (e) => move(e.clientX, e.clientY));
-      document.addEventListener("mouseup", end);
-      float.addEventListener("touchstart", (e) => { const t = e.touches[0]; if (t) { e.preventDefault(); start(t.clientX, t.clientY); } }, { passive: false });
-      document.addEventListener("touchmove", (e) => { const t = e.touches[0]; if (t) { e.preventDefault(); move(t.clientX, t.clientY); } }, { passive: false });
-      document.addEventListener("touchend", end);
-      float.addEventListener("click", () => {
-        if (moved) return;
-        overlay.style.display = "flex";
-        render();
-      });
-    })();
+
+(() => {
+  let active = false;
+  let moved = false;
+  let startX = 0;
+  let startY = 0;
+  let startLeft = 0;
+  let startTop = 0;
+
+  float.addEventListener("pointerdown", (e) => {
+    active = true;
+    moved = false;
+
+    const r = float.getBoundingClientRect();
+    startX = e.clientX;
+    startY = e.clientY;
+    startLeft = r.left;
+    startTop = r.top;
+
+    float.setPointerCapture(e.pointerId);
+    e.preventDefault();
+  });
+
+  float.addEventListener("pointermove", (e) => {
+    if (!active) return;
+
+    const dx = e.clientX - startX;
+    const dy = e.clientY - startY;
+
+    if (!moved && Math.hypot(dx, dy) > 7) {
+      moved = true;
+    }
+
+    if (moved) {
+      float.style.left = startLeft + dx + "px";
+      float.style.top = startTop + dy + "px";
+      float.style.right = "auto";
+      float.style.bottom = "auto";
+    }
+  });
+
+  float.addEventListener("pointerup", () => {
+    if (!active) return;
+
+    active = false;
+
+    if (!moved) {
+      overlay.style.display = "flex";
+      render();
+    }
+  });
+
+  float.addEventListener("pointercancel", () => {
+    active = false;
+  });
+})();
+    
 
     overlay = document.createElement("div");
     overlay.id = "wingo-overlay";
